@@ -1,0 +1,8 @@
+#app {
+    display: inline-block;
+}
+
+#app li:hover{
+    cursor:pointer;
+    color:#1a0dab;
+}
