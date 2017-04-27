@@ -1,7 +1,8 @@
 export default class idGenerator{
+    
     constructor(tree){
         this.tree = tree;
-        this.id = 0;
+        this.id = 1;
         this.generateIds(this.tree);
     }
     

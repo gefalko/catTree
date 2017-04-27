@@ -37,10 +37,12 @@ export default class appController{
     modeListener(){
         if (document.getElementById('recursive').checked) {
             this.mode = 0;
+            console.log("Print on recursive mode");
         }
 
         if (document.getElementById('iterative').checked) {
             this.mode = 1;
+            console.log("Print on iterative mode");
         }
 
         this.printHtml();
