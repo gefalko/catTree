@@ -1,3 +1,4 @@
+// statefull class
 export default class idGenerator{
     
     constructor(tree){
@@ -7,13 +8,15 @@ export default class idGenerator{
     }
     
     generateIds(node){
-        node.id = this.getId();
-        if(node.data)
-            for(let childNode of node.data)
+        node.id = this.generateId();
+        if(node.data){
+            for(let childNode of node.data){
                 this.generateIds(childNode);
+            }
+        }   
     }
 
-    getId(){
+    generateId(){
         return this.id++;
     }
 

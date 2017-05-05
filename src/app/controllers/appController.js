@@ -11,8 +11,8 @@ export default class appController{
         // 0 - recursive mode, 1 - iterative mode
         this.mode = 0;
         
-        this.appElement.addEventListener('click', this.clickListener.bind(this));
-        this.modeElement.addEventListener('click', this.modeListener.bind(this));
+        this.appElement.addEventListener('click', this.addCategoryListener.bind(this));
+        this.modeElement.addEventListener('click', this.changeModeListener.bind(this));
 
         this.idGenerator = new IdGenerator(tree);
         this.tree = this.idGenerator.getTree();
@@ -21,7 +21,7 @@ export default class appController{
         this.printHtml();
     }
 
-    clickListener(el){
+    addCategoryListener(el){
         const parentId = el.target.getAttribute('data-id');
         const newCat = prompt("Please enter category name:", "");
         
@@ -29,12 +29,12 @@ export default class appController{
             console.log("User cancelled the prompt.");
         } else {
             this.addNewCategory(newCat, parentId);
+            this.printHtml();
         }
 
-        this.printHtml();
     }
 
-    modeListener(){
+    changeModeListener(){
         if (document.getElementById('recursive').checked) {
             this.mode = 0;
             console.log("Print on recursive mode");
@@ -54,7 +54,7 @@ export default class appController{
        
         if(!node.data)node.data = [];
 
-        node.data.push({id:this.idGenerator.getId(), name:name});
+        node.data.push({id:this.idGenerator.generateId, name:name});
 
     }
 

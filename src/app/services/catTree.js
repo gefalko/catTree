@@ -3,112 +3,94 @@ export default class CatTree{
     printTreeRecursiveWay(node){
         let res = '<ul>'+this.getLi(node);
 
-        if(node.data)
-            for(let childNode of node.data)
+        if(node.data){
+            for(let childNode of node.data){
                 res+=`${this.printTreeRecursiveWay(childNode)}`;               
+            }
+        }
             
-        
         return res += "</ul>";
     }
 
     printTreeIterativeWay(tree) {
         if(!tree.data)return "<ul>"+this.getLi(tree)+"</ul>";
-        return this.printArray(this.tree2List(tree));
+        return this.list2html(this.tree2List(tree));
     }
     
     getLi(node){
-        const id = node.id ? ` data-id=${node.id}` : '';
-        return `<li${id}>${node.name}</li>`
+        return `<li${this.getId(node)}>${node.name}</li>`
+    }
+
+    getId(node){
+        return node.id ? ` data-id=${node.id}` : '';
     }
 
     tree2List(tree){
+
         let stack =[];
-        let array = [];
+        let list = [];
         let node;
-        let res = '';
-  
+
         stack.push(tree)
+
+        tree.level = 0;
 
         while(stack.length !== 0) {
 
             node = stack.pop();
-
-            // set root node info
-            if(!node.level){
-                node.level = 0;
-                node.last = true;
-            }
-            
-            array.push(node);
+            list.push(node);
 
             if(node.data){
-
                for(let i = node.data.length - 1; i >= 0; i--) {
-
-                   if(node.data.length -1 == i)node.data[i].last = true; 
-                   else node.data[i].last = false;                        
-                   
                    node.data[i].level = node.level + 1;
-
                    stack.push(node.data[i]);
                }
             }
         }
 
-        return array;
+        return list;
     }
 
-
-
-    printArray(nodes){
-
-        let res = "";
-
-        for(let i=0; i < nodes.length; i++){
-           
-            let now = nodes[i];
-            
-            res += '<ul>'+this.getLi(now);
-            
-            res += this.getUls(this.countUls(nodes,i));
+    list2html(list){
+        
+        if(!list){
+            return '<ul></ul>';
         }
 
-        return res;
-    }
+        let nowLevel;
+        let res = `<ul><li${this.getId(list[0])}>`;
+        let nextLevel;
+      
+        for(let i = 0; i < list.length; i++){
+            
+            nowLevel = list[i].level;
 
-    getUls(total){
-        let res = '';
-        
-        for(let j = 0; j < total; j++)
-            res += "</ul>";     
-        
-        return res;    
-    }
-
-    countUls(nodes, ci){
-
-        const node = nodes[ci];
-        
-        if(node.data) return 0;
-        if(!node.last) return 1;
-        
-        let count = 1;
-
-        let level = node.level;
-
-        for(let i = ci-1; i >= 0; i-- ){
-            let now = nodes[i];
-
-            if(level > now.level && !now.last)return count+1;
-
-            if(level > now.level){
-               level = now.level;
-               count++;
+            if(list[i+1]){
+                nextLevel = list[i+1].level;
+            }else{
+                nextLevel = null;
             }
 
-        }
+            res += list[i].name;
+            
+            if(nextLevel != null && nextLevel > nowLevel){
 
-        return count;
+                res += `<ul><li${this.getId(list[i+1])}>`;
+
+            }else if(nextLevel != null && nextLevel < nowLevel){
+                
+                res += '</li>'+'</ul></li>'.repeat(nowLevel-nextLevel)+`<li${this.getId(list[i+1])}>`;
+
+            }else if(nextLevel == nowLevel){
+
+                res += `</li><li${this.getId(list[i+1])}>`;
+
+            }
+        }
+       
+        return res += '</li></ul>'.repeat(nowLevel+1);
+
     }
+
 
 }
